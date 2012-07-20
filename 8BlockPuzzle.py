@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 #let's try and implement that block puzzle.
 
+initState = [[7, 2, 4],
+            [5, 0, 6],
+            [8, 3, 1]]
 
 actions = ['L', 'R', 'U', 'D']
 transitions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
@@ -19,7 +22,10 @@ class blockPuzzle_3:
             raise ValueError, 'Invalid initial puzzle.'
 
     def getState(self):
-        return self.currentState
+        a = []
+        for row in self.currentState:
+            a.append(tuple(row))
+        return tuple(a)
 
     def getPath(self):
         return self.path
@@ -96,20 +102,24 @@ def show(self):
         print row
     print '======='
 
+def illustrateSolution(solution):
+    puzzle = blockPuzzle_3(initState)
+    for movement in solution:
+        show(puzzle)
+        move(puzzle, movement)
+    show(puzzle)
 
-goalState = [[0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8]]
+
+goalState = ((0, 1, 2),
+            (3, 4, 5),
+            (6, 7, 8))
 
 
 ########################
 def depthFirstSearch():
     from collections import deque
-    initBlock = blockPuzzle_3([[7, 2, 4],
-                                [5, 0, 6],
-                                [8, 3, 1]],
-                              [])
-    explored = []
+    initBlock = blockPuzzle_3(initState)
+    explored = set()
     frontier = deque([initBlock])
     depth = -1
 
@@ -122,25 +132,17 @@ def depthFirstSearch():
             print 'Size of explored = %i' % len(explored)
             print 'Size of frontier = %i' % len(frontier)
         frontier.extend(expand(currentNode, explored))
-        explored.append(currentNode.getState())
+        explored.add(currentNode.getState())
         #print 'frontier = ', frontier
         currentNode = frontier.popleft()
     for movement in currentNode.getPath():
         print actions[movement],
+    print
     return currentNode.getPath()
 
 
-if __name__ == '__main__':
-    initBlock = blockPuzzle_3([[7, 2, 4],
-                                [0, 5, 6],
-                                [8, 3, 1]],
-                              [])
-    depthFirstSearch()
-##    stuff = [initBlock.getState()]
-##    show(initBlock)
-##    b = expand(initBlock, stuff)
-##    for i in b:
-##        show(i)
-##        stuff.append(i.getState())
 
+if __name__ == '__main__':
+    solution = depthFirstSearch()
+    illustrateSolution(solution)
 
