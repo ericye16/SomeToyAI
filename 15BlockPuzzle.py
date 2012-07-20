@@ -1,17 +1,18 @@
 #!/usr/bin/env python
-#let's try and implement that block puzzle.
+#let's try and implement that block puzzle. 15 blocks this time.
 
-initState = [[7, 2, 4],
-            [5, 0, 6],
-            [8, 3, 1]]
+initState = [[2, 12, 11, 14],
+             [6, 15, 10, 5],
+             [3, 0, 9, 13],
+             [8, 7, 1, 4]]
 
 actions = ['L', 'R', 'U', 'D']
 transitions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
-class blockPuzzle_3:
+class blockPuzzle_4:
     '''Stores all the stuff. You know what I mean.'''
 
-    currentState = [[0 for x in range(3)] for y in range(3)]
+    currentState = [[0 for x in range(4)] for y in range(4)]
     currentBlank = [-1, -1]
 
     def __init__(self, beginState, path = []):
@@ -60,19 +61,19 @@ def move(self, move):
 
 def moveAndGet(self, movePlace):
     currentState = list(self.getState())
-    newState = blockPuzzle_3(currentState, self.path[:])
+    newState = blockPuzzle_4(currentState, self.path[:])
     move(newState, movePlace)
     return newState
 
 def check(puzzle, state):
     a = []
-    for row in range(3):
-        for element in range(3):
+    for row in range(4):
+        for element in range(4):
             if state[row][element] == 0:
                 puzzle.currentBlank = [row, element]
             a.append(state[row][element])
     a.sort()
-    if a == range(9):
+    if a == range(16):
         return True
     else:
         return False
@@ -80,8 +81,8 @@ def check(puzzle, state):
 def isValidMove(self, blankPlace, transitions, move):
     newY = blankPlace[0] - transitions[move][0]
     newX = blankPlace[1] - transitions[move][1]
-    if newY < 0 or newY > 2 or \
-       newX < 0 or newX > 2:
+    if newY < 0 or newY > 3 or \
+       newX < 0 or newX > 3:
         return False
     else:
         return True
@@ -103,22 +104,23 @@ def show(self):
     print '======='
 
 def illustrateSolution(solution):
-    puzzle = blockPuzzle_3(initState)
+    puzzle = blockPuzzle_4(initState)
     for movement in solution:
         show(puzzle)
         move(puzzle, movement)
     show(puzzle)
 
 
-goalState = ((1, 2, 3),
-            (4, 5, 6),
-            (7, 8, 0))
+goalState = ((1, 2, 3, 4),
+            (5, 6, 7, 8),
+            (9, 10,11, 12),
+            (13, 14, 15, 0))
 
 
 ########################
 def depthFirstSearch():
     from collections import deque
-    initBlock = blockPuzzle_3(initState)
+    initBlock = blockPuzzle_4(initState)
     explored = set()
     frontier = deque([initBlock])
     depth = -1
@@ -147,5 +149,5 @@ def depthFirstSearch():
 
 if __name__ == '__main__':
     solution = depthFirstSearch()
-    illustrateSolution(solution)
+    #illustrateSolution(solution)
 
