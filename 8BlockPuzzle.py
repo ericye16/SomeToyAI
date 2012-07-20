@@ -12,7 +12,7 @@ class blockPuzzle_3:
 
     def __init__(self, beginState):
         if self.check(beginState):
-            self.currentState = beginState
+            self.currentState = list(beginState)
         else:
             raise ValueError, 'Invalid initial puzzle.'
 
@@ -63,7 +63,8 @@ class blockPuzzle_3:
             return True
 
     def moveAndGet(self, move):
-        newState = blockPuzzle_3(self.currentState)
+        currentState = list(self.getState())
+        newState = blockPuzzle_3(currentState)
         newState.move(move)
         return newState
 
@@ -79,6 +80,14 @@ class blockPuzzle_3:
                 newState = self.moveAndGet(move)
                 newState.show()
                 a.append(newState)
+
+        ###so the problem, I think, is that when you make a new
+                ###instance of the class, the old and new
+                ###currentStates point to the same thing (or the values
+                ###in each point to the same things,)
+                ###so some really weird things are happening.
+
+                
         return a
 
 
