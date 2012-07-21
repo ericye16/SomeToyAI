@@ -147,7 +147,7 @@ def h(state):
             difRow = abs(row - goalRow)
             difCol = abs(element - goalCol)
             s += difRow + difCol
-    return s
+    return s/2
 
 def greedyBestFirstSearch():
     initBlock = blockPuzzle_4(initState)
