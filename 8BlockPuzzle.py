@@ -269,6 +269,8 @@ def breadthFirstSearch():
 
 if __name__ == '__main__':
     import sys
+    if len(sys.argv) < 2:
+        solution = AStarSearch()
     if sys.argv[1] == 'AStar':
         solution = AStarSearch()
     elif sys.argv[1] == 'BreadthFirst':
