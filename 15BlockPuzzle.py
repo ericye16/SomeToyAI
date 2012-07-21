@@ -113,8 +113,83 @@ def illustrateSolution(solution):
 
 goalState = ((1, 2, 3, 4),
             (5, 6, 7, 8),
-            (9, 10,11, 12),
+            (9, 10, 11, 12),
             (13, 14, 15, 0))
+
+####################### INFORMED SEARCH STUFFS
+
+goalStateLookupTable = {0: (3, 3),
+                        1: (0, 0),
+                        2: (0, 1),
+                        3: (0, 2),
+                        4: (0, 3),
+                        5: (1, 0),
+                        6: (1, 1),
+                        7: (1, 2),
+                        8: (1, 3),
+                        9: (2, 0),
+                        10: (2, 1),
+                        11: (2, 2),
+                        12: (2, 3),
+                        13: (3, 0),
+                        14: (3, 1),
+                        15: (3, 2)}
+
+def h(state):
+    '''The heuristic function. Return the sum of the manhattan distances
+    of each block to their proper location.'''
+
+    s = 0
+    for row in range(len(state)):
+        for element in range(len(state[row])):
+            block = state[row][element]
+            goalRow, goalCol = goalStateLookupTable[block]
+            difRow = abs(row - goalRow)
+            difCol = abs(element - goalCol)
+            s += difRow + difCol
+    return s
+
+def greedyBestFirstSearch():
+    initBlock = blockPuzzle_4(initState)
+    initEval = h(initBlock.getState())
+##    depth = -1
+    explored = set()
+    frontier = [(initEval, initBlock)]
+
+    currentHeuristic = 1000
+    newHeuristic, currentNode = frontier.pop()
+    while currentNode.getState() != goalState:
+        
+##        currentDepth = currentNode.getDepth()
+##        if currentDepth != depth:
+##            depth = currentDepth
+##            print 'Depth = %i' % depth
+##            print 'Size of explored = %i' % len(explored)
+##            print 'Size of frontier = %i' % len(frontier)
+            
+        frontier.extend([(h(x.getState()),
+                          x) for x in expand(currentNode, explored)])
+        explored.add(currentNode.getState())
+        
+        if newHeuristic < currentHeuristic:
+            currentHeuristic = newHeuristic
+            print 'current Heuristic = %i' % currentHeuristic
+            print 'Depth = %i' % currentNode.getDepth()
+            print 'Size of explored = %i' % len(explored)
+            print 'Size of frontier = %i' % len(frontier)
+            print '============'
+
+        if len(frontier) == 0:
+            print 'This puzzle is not solvable.'
+            return
+        
+        frontier.sort(reverse = True)
+        newHeuristic, currentNode = frontier.pop()
+        
+    for movement in currentNode.getPath():
+        print actions[movement],
+    print
+    return currentNode.getPath()
 
 
 ########################
@@ -148,6 +223,7 @@ def depthFirstSearch():
 
 
 if __name__ == '__main__':
-    solution = depthFirstSearch()
+    solution = greedyBestFirstSearch()
+    #solution = depthFirstSearch()
     #illustrateSolution(solution)
-
+    pass
