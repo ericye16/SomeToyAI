@@ -116,6 +116,12 @@ goalState = ((1, 2, 3, 4),
             (9, 10, 11, 12),
             (13, 14, 15, 0))
 
+def spitOutStats(lenFrontier, lenExplored, lenPath):
+    print 'Size of frontier: %i' % lenFrontier
+    print 'Size of explored: %i' % lenExplored
+    print 'Length of path: %i' % lenPath
+
+
 ####################### INFORMED SEARCH STUFFS
 
 goalStateLookupTable = {0: (3, 3),
@@ -147,7 +153,7 @@ def h(state):
             difRow = abs(row - goalRow)
             difCol = abs(element - goalCol)
             s += difRow + difCol
-    return s/2
+    return s
 
 def greedyBestFirstSearch():
     initBlock = blockPuzzle_4(initState)
@@ -189,6 +195,7 @@ def greedyBestFirstSearch():
     for movement in currentNode.getPath():
         print actions[movement],
     print
+    spitOutStats(len(frontier), len(explored), len(currentNode.getPath()))
     return currentNode.getPath()
 
 
@@ -204,7 +211,7 @@ def AStarSearch():
     currentCombHeuristic, currentNode = frontier.pop()
     while currentNode.getState() != goalState:
         
-        if abs(currentCombHeuristic - oldCombHeuristic) > 5:
+        if abs(currentCombHeuristic - oldCombHeuristic) > 3:
             oldCombHeuristic = currentCombHeuristic
             print 'current combined Heuristic = %i' % currentCombHeuristic
             print 'Depth = %i' % currentNode.getDepth()
@@ -227,6 +234,7 @@ def AStarSearch():
     for movement in currentNode.getPath():
         print actions[movement],
     print
+    spitOutStats(len(frontier), len(explored), len(currentNode.getPath()))
     return currentNode.getPath()        
 
 
@@ -256,12 +264,18 @@ def breadthFirstSearch():
     for movement in currentNode.getPath():
         print actions[movement],
     print
+    spitOutStats(len(frontier), len(explored), len(currentNode.getPath()))
     return currentNode.getPath()
 
 
 
 if __name__ == '__main__':
-    solution = AStarSearch()
-    #solution = depthFirstSearch()
-    #illustrateSolution(solution)
-    pass
+    import sys
+    if sys.argv[1] == 'AStar':
+        solution = AStarSearch()
+    elif sys.argv[1] == 'BreadthFirst':
+        solution = breadthFirstSearch()
+    elif sys.argv[1] == 'Greedy':
+        solution = greedyBestFirstSearch()
+    else:
+        print 'Usage: ./15BlockPuzzle.py [algorithm]'

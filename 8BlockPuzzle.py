@@ -115,6 +115,13 @@ goalState = ((1, 2, 3),
             (7, 8, 0))
 
 
+def spitOutStats(lenFrontier, lenExplored, lenPath):
+    print 'Size of frontier: %i' % lenFrontier
+    print 'Size of explored: %i' % lenExplored
+    print 'Length of path: %i' % lenPath
+
+
+
 ####INFORMED ALGORITHMS
 
 goalStateLookupTable = {0: (2, 2),
@@ -146,7 +153,7 @@ def h(state):
             difRow = abs(row - goalRow)
             difCol = abs(element - goalCol)
             s += difRow + difCol
-    return s/2
+    return s
 
 def greedyBestFirstSearch():
     initBlock = blockPuzzle_3(initState)
@@ -188,6 +195,7 @@ def greedyBestFirstSearch():
     for movement in currentNode.getPath():
         print actions[movement],
     print
+    spitOutStats(len(frontier), len(explored), len(currentNode.getPath()))
     return currentNode.getPath()
 
 
@@ -226,6 +234,7 @@ def AStarSearch():
     for movement in currentNode.getPath():
         print actions[movement],
     print
+    spitOutStats(len(frontier), len(explored), len(currentNode.getPath()))
     return currentNode.getPath()        
 
 
@@ -255,9 +264,17 @@ def breadthFirstSearch():
     for movement in currentNode.getPath():
         print actions[movement],
     print
+    spitOutStats(len(frontier), len(explored), len(currentNode.getPath()))
     return currentNode.getPath()
 
 if __name__ == '__main__':
-    solution = breadthFirstSearch()
-    illustrateSolution(solution)
+    import sys
+    if sys.argv[1] == 'AStar':
+        solution = AStarSearch()
+    elif sys.argv[1] == 'BreadthFirst':
+        solution = breadthFirstSearch()
+    elif sys.argv[1] == 'Greedy':
+        solution = greedyBestFirstSearch()
+    else:
+        print 'Usage: ./8BlockPuzzle.py [algorithm]'
 
