@@ -192,8 +192,46 @@ def greedyBestFirstSearch():
     return currentNode.getPath()
 
 
+##### A-STAR TO THE RESCUE
+def AStarSearch():
+    initBlock = blockPuzzle_4(initState)
+    explored = set()
+    initHeuristic = h(initBlock.getState())
+    frontier = [(initHeuristic, initBlock)]
+    depth = -1
+    oldCombHeuristic = 0
+
+    currentCombHeuristic, currentNode = frontier.pop()
+    while currentNode.getState() != goalState:
+        
+        if abs(currentCombHeuristic - oldCombHeuristic) > 5:
+            oldCombHeuristic = currentCombHeuristic
+            print 'current combined Heuristic = %i' % currentCombHeuristic
+            print 'Depth = %i' % currentNode.getDepth()
+            print 'Size of explored = %i' % len(explored)
+            print 'Size of frontier = %i' % len(frontier)
+            print '============'
+
+        
+        #f(n) = h(n) + g(n)
+        #h(n) defined above, g(n) simply depth of node
+        frontier.extend([(h(x.getState())+x.getDepth(), x) for x
+                         in expand(currentNode, explored)])
+        frontier.sort(reverse = True)
+        explored.add(currentNode.getState())
+        if len(frontier) == 0:
+            print 'This puzzle is not solvable.'
+            return
+        currentCombHeuristic, currentNode = frontier.pop()
+        
+    for movement in currentNode.getPath():
+        print actions[movement],
+    print
+    return currentNode.getPath()        
+
+
 ########################
-def depthFirstSearch():
+def breadthFirstSearch():
     from collections import deque
     initBlock = blockPuzzle_4(initState)
     explored = set()
@@ -223,7 +261,7 @@ def depthFirstSearch():
 
 
 if __name__ == '__main__':
-    solution = greedyBestFirstSearch()
+    solution = AStarSearch()
     #solution = depthFirstSearch()
     #illustrateSolution(solution)
     pass
