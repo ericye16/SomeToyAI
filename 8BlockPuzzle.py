@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #let's try and implement that block puzzle.
 
+import Queue
+
 initState = [[7, 2, 4],
             [5, 0, 6],
             [8, 3, 1]]
@@ -146,8 +148,8 @@ def h(state):
     of each block to their proper location.'''
 
     s = 0
-    for row in range(len(state)):
-        for element in range(len(state[row])):
+    for row in range(3):
+        for element in range(3):
             block = state[row][element]
             goalRow, goalCol = goalStateLookupTable[block]
             difRow = abs(row - goalRow)
