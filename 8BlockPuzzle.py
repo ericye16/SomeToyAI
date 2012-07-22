@@ -198,6 +198,51 @@ def greedyBestFirstSearch():
     spitOutStats(len(frontier), len(explored), len(currentNode.getPath()))
     return currentNode.getPath()
 
+def depthLimitedGreedySearch():
+    initBlock = blockPuzzle_3(initState)
+    initEval = h(initBlock.getState())
+##    depth = -1
+    explored = set()
+    frontier = [(initEval, initBlock)]
+
+    currentHeuristic = 1000
+    newHeuristic, currentNode = frontier.pop()
+    currentDepth = currentNode.getDepth()
+    while currentNode.getState() != goalState:
+
+##        currentDepth = currentNode.getDepth()
+##        if currentDepth != depth:
+##            depth = currentDepth
+##            print 'Depth = %i' % depth
+##            print 'Size of explored = %i' % len(explored)
+##            print 'Size of frontier = %i' % len(frontier)
+        if currentDepth < 26: #3-puzzles can be solved in at most 26 moves
+            frontier.extend([(h(x.getState()),
+                          x) for x in expand(currentNode, explored)])
+        explored.add(currentNode.getState())
+##
+##        if newHeuristic < currentHeuristic:
+##            currentHeuristic = newHeuristic
+##            print 'current Heuristic = %i' % currentHeuristic
+##            print 'Depth = %i' % currentNode.getDepth()
+##            print 'Size of explored = %i' % len(explored)
+##            print 'Size of frontier = %i' % len(frontier)
+##            print '============'
+
+        if len(frontier) == 0:
+            print 'This puzzle is not solvable.'
+            return
+
+        frontier.sort(reverse = True)
+        newHeuristic, currentNode = frontier.pop()
+        currentDepth = currentNode.getDepth()
+
+    for movement in currentNode.getPath():
+        print actions[movement],
+    print
+    spitOutStats(len(frontier), len(explored), len(currentNode.getPath()))
+    return currentNode.getPath()
+        
 
 ##### A-STAR TO THE RESCUE
 def AStarSearch():
@@ -271,12 +316,14 @@ if __name__ == '__main__':
     import sys
     if len(sys.argv) < 2:
         solution = AStarSearch()
-    if sys.argv[1] == 'AStar':
-        solution = AStarSearch()
-    elif sys.argv[1] == 'BreadthFirst':
-        solution = breadthFirstSearch()
-    elif sys.argv[1] == 'Greedy':
-        solution = greedyBestFirstSearch()
-    else:
         print 'Usage: ./8BlockPuzzle.py [algorithm]'
+    else:
+        if sys.argv[1] == 'AStar':
+            solution = AStarSearch()
+        elif sys.argv[1] == 'BreadthFirst':
+            solution = breadthFirstSearch()
+        elif sys.argv[1] == 'Greedy':
+            solution = greedyBestFirstSearch()
+        elif sys.argv[1] == 'DepthLimitedGreedy':
+            solution = depthLimitedGreedySearch()
 
