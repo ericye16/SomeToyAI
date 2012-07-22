@@ -162,10 +162,11 @@ def greedyBestFirstSearch():
     initEval = h(initBlock.getState())
     depth = -1
     explored = set()
-    frontier = [(initEval, initBlock)]
+    frontier = Queue.PriorityQueue()
+    frontier.put((initEval, initBlock))
 
     currentHeuristic = 1000
-    newHeuristic, currentNode = frontier.pop()
+    newHeuristic, currentNode = frontier.get()
     while currentNode.getState() != goalState:
         
 ##        currentDepth = currentNode.getDepth()
@@ -176,9 +177,9 @@ def greedyBestFirstSearch():
 ##            print 'Size of explored = %i' % len(explored)
 ##            print 'Size of frontier = %i' % len(frontier)
 ##            print '============'
-            
-        frontier.extend([(h(x.getState()),
-                          x) for x in expand(currentNode, explored)])
+
+        for newNode in expand(currentNode, explored):
+            frontier.put((h(newNode.getState()), newNode))
         explored.add(currentNode.getState())
         
         if newHeuristic < currentHeuristic:
@@ -186,20 +187,19 @@ def greedyBestFirstSearch():
             print 'current Heuristic = %i' % currentHeuristic
             print 'Depth = %i' % currentNode.getDepth()
             print 'Size of explored = %i' % len(explored)
-            print 'Size of frontier = %i' % len(frontier)
+            print 'Size of frontier = %i' % frontier.qsize()
             print '============'
 
-        if len(frontier) == 0:
+        if frontier.empty():
             print 'This puzzle is not solvable.'
             return
         
-        frontier.sort(reverse = True)
-        newHeuristic, currentNode = frontier.pop()
+        newHeuristic, currentNode = frontier.get()
         
     for movement in currentNode.getPath():
         print actions[movement],
     print
-    spitOutStats(len(frontier), len(explored), len(currentNode.getPath()))
+    spitOutStats(frontier.qsize(), len(explored), len(currentNode.getPath()))
     return currentNode.getPath()
 
 def depthLimitedGreedySearch():
