@@ -3,10 +3,10 @@
 
 import Queue
 
-initState = [[2, 12, 11, 14],
-             [6, 15, 10, 5],
-             [3, 0, 9, 13],
-             [8, 7, 1, 4]]
+initState = [[2, 3, 4, 0],
+             [1, 5, 7, 8],
+             [9, 6, 10, 12],
+             [13, 14, 11, 15]]
 
 actions = ['L', 'R', 'U', 'D']
 transitions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
@@ -240,7 +240,6 @@ def depthLimitedGreedySearch():
             print 'This puzzle is not solvable.'
             return
 
-        frontier.sort(reverse = True)
         newHeuristic, currentNode = frontier.get()
 
     for movement in currentNode.getPath():
