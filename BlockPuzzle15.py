@@ -177,7 +177,6 @@ def greedyBestFirstSearch():
 ##            print 'Size of explored = %i' % len(explored)
 ##            print 'Size of frontier = %i' % len(frontier)
 ##            print '============'
-
         for newNode in expand(currentNode, explored):
             frontier.put((h(newNode.getState()), newNode))
         explored.add(currentNode.getState())
@@ -207,10 +206,11 @@ def depthLimitedGreedySearch():
     initEval = h(initBlock.getState())
     depth = -1
     explored = set()
-    frontier = [(initEval, initBlock)]
+    frontier = Queue.PriorityQueue()
+    frontier.put((initEval, initBlock))
 
     currentHeuristic = 1000
-    newHeuristic, currentNode = frontier.pop()
+    newHeuristic, currentNode = frontier.get()
     currentDepth = currentNode.getDepth()
     while currentNode.getState() != goalState:
 
@@ -224,8 +224,8 @@ def depthLimitedGreedySearch():
 ##            print 'Size of frontier = %i' % len(frontier)
 ##            print '============'
         if currentDepth < 80: #4-puzzles can be solved in at most 80 moves
-            frontier.extend([(h(x.getState()),
-                          x) for x in expand(currentNode, explored)])
+            for newNode in expand(currentNode, explored):
+                frontier.put((h(newNode.getState()), newNode))
         explored.add(currentNode.getState())
 ##
 ##        if newHeuristic < currentHeuristic:
@@ -236,17 +236,17 @@ def depthLimitedGreedySearch():
 ##            print 'Size of frontier = %i' % len(frontier)
 ##            print '============'
 
-        if len(frontier) == 0:
+        if frontier.empty():
             print 'This puzzle is not solvable.'
             return
 
         frontier.sort(reverse = True)
-        newHeuristic, currentNode = frontier.pop()
+        newHeuristic, currentNode = frontier.get()
 
     for movement in currentNode.getPath():
         print actions[movement],
     print
-    spitOutStats(len(frontier), len(explored), len(currentNode.getPath()))
+    spitOutStats(frontier.qsize(), len(explored), len(currentNode.getPath()))
     return currentNode.getPath()
 
 ##### A-STAR TO THE RESCUE
@@ -254,7 +254,8 @@ def AStarSearch():
     initBlock = blockPuzzle_4(initState)
     explored = set()
     initHeuristic = h(initBlock.getState())
-    frontier = [(initHeuristic, initBlock)]
+    frontier = Queue.PriorityQueue()
+    frontier.put((initHeuristic, initBlock))
     depth = -1
     oldCombHeuristic = 0
 
@@ -272,31 +273,31 @@ def AStarSearch():
         
         #f(n) = h(n) + g(n)
         #h(n) defined above, g(n) simply depth of node
-        frontier.extend([(h(x.getState())+x.getDepth(), x) for x
-                         in expand(currentNode, explored)])
-        frontier.sort(reverse = True)
+        for newNode in expand(currentNode, explored):
+            frontier.put((h(newNode.getState()) + newNode.getDepth(), newNode))
+
         explored.add(currentNode.getState())
-        if len(frontier) == 0:
+        if frontier.empty():
             print 'This puzzle is not solvable.'
             return
-        currentCombHeuristic, currentNode = frontier.pop()
+        currentCombHeuristic, currentNode = frontier.get()
         
     for movement in currentNode.getPath():
         print actions[movement],
     print
-    spitOutStats(len(frontier), len(explored), len(currentNode.getPath()))
+    spitOutStats(frontier.qsize(), len(explored), len(currentNode.getPath()))
     return currentNode.getPath()        
 
 
 ########################
 def breadthFirstSearch():
-    from collections import deque
     initBlock = blockPuzzle_4(initState)
     explored = set()
-    frontier = deque([initBlock])
+    frontier = Queue.Queue()
+    frontier.put(initBlock)
     depth = -1
 
-    currentNode = frontier.popleft()
+    currentNode = frontier.get()
     while currentNode.getState() != goalState:
         currentDepth = currentNode.getDepth()
         if currentDepth != depth:
@@ -304,17 +305,18 @@ def breadthFirstSearch():
             print 'Depth = %i' % depth
             print 'Size of explored = %i' % len(explored)
             print 'Size of frontier = %i' % len(frontier)
-        frontier.extend(expand(currentNode, explored))
+        for newNode in expand(currentNode, explored):
+            frontier.put(newNode)
         explored.add(currentNode.getState())
         #print 'frontier = ', frontier
-        if len(frontier) == 0:
+        if frontier.empty():
             print 'This puzzle is not solvable.'
             return
-        currentNode = frontier.popleft()
+        currentNode = frontier.get()
     for movement in currentNode.getPath():
         print actions[movement],
     print
-    spitOutStats(len(frontier), len(explored), len(currentNode.getPath()))
+    spitOutStats(frontier.qsize(), len(explored), len(currentNode.getPath()))
     return currentNode.getPath()
 
 

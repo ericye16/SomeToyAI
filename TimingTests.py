@@ -21,14 +21,18 @@ depthLimitedGreedy8 = timeit.timeit('BlockPuzzle8.depthLimitedGreedySearch()',
 
 
 print 'A* on 8 puzzle: %f' % AStarSearch8
-#Non-priority queue: 6.221501
+#Non-Queue: 6.221501
+#Queue: 0.631132
 
 print 'Breadth-first search on 8 puzzle: %f' % breadthFirstSearch8
-#Non-priority queue: 58.277133
+#Non-Queue: 58.277133
+#Queue: 69.426882
 
 print 'Greedy best-first search on 8 puzzle: %f' % greedy8
-#Non-priority queue: 2.396569
+#Non-Queue: 2.396569
+#Queue: 0.626330
 
 print 'Depth-limited greedy search on 8 puzzle: %f' % depthLimitedGreedy8
 #Non-priority queue: 243.450213
-#wow. That's not very impressive. There goes my genius...
+#Queue: 3.685799
+#Significantly more impressive.
