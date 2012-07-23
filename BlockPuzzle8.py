@@ -218,7 +218,7 @@ def depthLimitedGreedySearch():
 ##            print 'Depth = %i' % depth
 ##            print 'Size of explored = %i' % len(explored)
 ##            print 'Size of frontier = %i' % len(frontier)
-        if currentDepth < 26: #3-puzzles can be solved in at most 26 moves
+        if currentDepth < 31: #3-puzzles can be solved in at most 31 moves
             frontier.extend([(h(x.getState()),
                           x) for x in expand(currentNode, explored)])
         explored.add(currentNode.getState())
