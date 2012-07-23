@@ -259,7 +259,7 @@ def AStarSearch():
     depth = -1
     oldCombHeuristic = 0
 
-    currentCombHeuristic, currentNode = frontier.pop()
+    currentCombHeuristic, currentNode = frontier.get()
     while currentNode.getState() != goalState:
         
         if abs(currentCombHeuristic - oldCombHeuristic) > 3:
@@ -267,7 +267,7 @@ def AStarSearch():
             print 'current combined Heuristic = %i' % currentCombHeuristic
             print 'Depth = %i' % currentNode.getDepth()
             print 'Size of explored = %i' % len(explored)
-            print 'Size of frontier = %i' % len(frontier)
+            print 'Size of frontier = %i' % frontier.qsize()
             print '============'
 
         
@@ -304,7 +304,7 @@ def breadthFirstSearch():
             depth = currentDepth
             print 'Depth = %i' % depth
             print 'Size of explored = %i' % len(explored)
-            print 'Size of frontier = %i' % len(frontier)
+            print 'Size of frontier = %i' % frontier.qsize()
         for newNode in expand(currentNode, explored):
             frontier.put(newNode)
         explored.add(currentNode.getState())
