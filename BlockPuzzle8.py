@@ -221,13 +221,8 @@ def depthLimitedGreedySearch():
 ##            print 'Size of explored = %i' % len(explored)
 ##            print 'Size of frontier = %i' % len(frontier)
         if currentDepth < 31: #3-puzzles can be solved in at most 31 moves
-<<<<<<< HEAD:BlockPuzzle8.py
             for newNode in expand(currentNode, explored):
                 frontier.put((h(newNode.getState()), newNode))
-=======
-            frontier.extend([(h(x.getState()),
-                          x) for x in expand(currentNode, explored)])
->>>>>>> master:BlockPuzzle8.py
         explored.add(currentNode.getState())
 ##
 ##        if newHeuristic < currentHeuristic:
