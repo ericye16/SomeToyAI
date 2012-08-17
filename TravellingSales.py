@@ -20,7 +20,6 @@
 distances = (
     #Distances from Home
     (('Home', 'Cornell'), 397),
-    (('Home', 'Dartmouth'), 785),
     (('Home', 'Harvard'), 881),
     (('Home', 'Yale'), 820),
     (('Home', 'Carnegie'), 516),
@@ -28,19 +27,11 @@ distances = (
     (('Home', 'Falls'), 338),
 
     #Distances from Cornell
-    (('Cornell', 'Dartmouth'), 495),
     (('Cornell', 'Harvard'), 530),
     (('Cornell', 'Yale'), 419),
     (('Cornell', 'Carnegie'), 560),
     (('Cornell', 'Boston'), 533),
     (('Cornell', 'Falls'), 67),
-
-    #Distances from Dartmouth
-    (('Dartmouth', 'Harvard'), 203),
-    (('Dartmouth', 'Yale'), 306),
-    (('Dartmouth', 'Carnegie'), 1000),
-    (('Dartmouth', 'Boston'), 207),
-    (('Dartmouth', 'Falls'), 490),
 
     #Distances from Harvard
     (('Harvard', 'Yale'), 217),
@@ -83,3 +74,4 @@ def getDistance(loc1, loc2):
 ###################################Algorithm########################
 def bruteForce():
     '''The brute force method.'''
+    pass #TODO: figure this out
