@@ -88,15 +88,15 @@ def bruteForce():
     #Thank god for itertools.permutations. I would have had (and still don't)
     #have any clue how to find all permutations of a list.
     import itertools
-    cities = allLocs.copy()
-    cities.remove('Home')
     #Find every permutation of the places we visit.
     sequences = list(itertools.permutations(cities))
     #Remember to start and end at home.
     #Each sequence in sequences stores a list as follows:
     #[Total distance, [list of places to go in order]]
     for i in range(len(sequences)):
-        sequences[i] = [-1, ['Home'] + list(sequences[i]) + ['Home']]
+        currentSeq = list(sequences[i])
+        currentSeq.append(currentSeq[0]) #make cyclical
+        sequences[i] = [-1, currentSeq]
     #Go through each sequence and update the total distance for each.
     for i in range(len(sequences)):
         sequences[i][0] = getTotDist(sequences[i][1])
