@@ -115,23 +115,23 @@ def bruteForce():
 
 # Equation 5 in the paper reads as follows:
 # (5) a) (n(S) = 1):    C({l}, l) = a_1l,   for any l.
-#     b) (n(S) > 1):    C(C, l) = min_mϵs-l [C(S-l, m) + a_ml].
+#     b) (n(S) > 1):    C(S, l) = min_mϵs-l [C(S-l, m) + a_ml].
 # In which S is a perfect subset of the integers from {2, 3, ..., n}
 # and l ϵ S, and C(S, l) denotes the minimum cost of starting from
 # city one and visiting all cities in the set S, terminating at city l.
 # Note that because Python is zero-indexed, S is actually from {1, ..., n-1}
 
-def Eq5HKD(S, l):
+def Eq5HKD(S, el):
     #5 a)
     if len(S) == 1:
-        return getDistance(cities[0], cities[l])
+        return getDistance(cities[0], cities[el])
     #5 b)
     elif len(S) > 1:
         newS = S[:]
-        newS.remove(l)
+        newS.remove(el)
         minM = 100000000 #some really big number
         for m in newS:
-            newM = Eq5HKD(newS, m) + getDistance(cities[m], cities[0])
+            newM = Eq5HKD(newS, m) + getDistance(cities[m], cities[el])
             if newM < minM:
                 minM = newM
         return minM
@@ -153,24 +153,14 @@ def HeldKarpDynamic():
     # Note again that we must zero-index things.
 
     minC = 100000000 #some really big number
-    for l in subCities:
-        newC = Eq5HKD(subCities, l) + getDistance(cities[l], cities[0])
+    for el in subCities:
+        newC = Eq5HKD(subCities, el) + getDistance(cities[el], cities[0])
         if newC < minC:
             minC = newC
-    print minC
-
-    # At this point, the minimum cost should be in 'minC.'
-    # However, I don't think the triangle inequality is held in our data,
-    # so this may not work so well.
-
-    # Currently, minC is 2573, which isn't even in the table of solutions
-    # From the brute force method. This suggests a bug as opposed to
-    # a non-optimal algorithm.
-
-
+    
 
 #############################Main##########################
 if __name__ == '__main__':
-    solution = bruteForce()
-    print 'Shortest route is {0} with total distance {1}km.'.format(solution[1],
-                                                                  solution[0])
+    solution = HeldKarpDynamic()
+##    print 'Shortest route is {0} with total distance {1}km.'\
+##    .format(solution[1], solution[0])
