@@ -69,9 +69,40 @@ def getDistance(loc1, loc2):
     '''Returns the distance between loc1 and loc2 according to the table.'''
     return distanceTable[frozenset((loc1, loc2))]
 
+def getTotDist(sequence):
+    '''Returns the total distance of a proposed sequence.'''
+    s = 0
+    for i in range(0, len(sequence)-1):
+        s += getDistance(sequence[i], sequence[i+1])
+    return s
 
 
 ###################################Algorithm########################
 def bruteForce():
     '''The brute force method.'''
-    pass #TODO: figure this out
+    #Thank god for itertools.permutations. I would have had (and still don't)
+    #have any clue how to find all permutations of a list.
+    import itertools
+    cities = allLocs.copy()
+    cities.remove('Home')
+    #Find every permutation of the places we visit.
+    sequences = list(itertools.permutations(cities))
+    #Remember to start and end at home.
+    #Each sequence in sequences stores a list as follows:
+    #[Total distance, [list of places to go in order]]
+    for i in range(len(sequences)):
+        sequences[i] = [-1, ['Home'] + list(sequences[i]) + ['Home']]
+    #Go through each sequence and update the total distance for each.
+    for i in range(len(sequences)):
+        sequences[i][0] = getTotDist(sequences[i][1])
+    #Sort by order of least distance.
+    sequences.sort()
+    return sequences[0]
+
+
+
+#############################Main##########################
+if __name__ == '__main__':
+    solution = bruteForce()
+    print 'Shortest route is {0} with total distance {1}km.'.format(solution[1],
+                                                                  solution[0])
