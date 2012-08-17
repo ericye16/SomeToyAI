@@ -102,7 +102,7 @@ def bruteForce():
         sequences[i][0] = getTotDist(sequences[i][1])
     #Sort by order of least distance.
     sequences.sort()
-    return sequences
+    return sequences[0]
 
 
 
@@ -171,6 +171,6 @@ def HeldKarpDynamic():
 
 #############################Main##########################
 if __name__ == '__main__':
-    solution = HeldKarpDynamic()
+    solution = bruteForce()
     print 'Shortest route is {0} with total distance {1}km.'.format(solution[1],
                                                                   solution[0])
