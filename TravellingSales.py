@@ -1,6 +1,40 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
+#### Memoize function to use later
+import collections
+import functools
+
+class memoized(object):
+   '''Decorator. Caches a function's return value each time it is called.
+   If called later with the same arguments, the cached value is returned
+   (not reevaluated).
+   '''
+   def __init__(self, func):
+      self.func = func
+      self.cache = {}
+   def __call__(self, *args):
+      if not isinstance(args, collections.Hashable):
+         # uncacheable. a list, for instance.
+         # better to not cache than blow up.
+         return self.func(*args)
+      if args in self.cache:
+         return self.cache[args]
+      else:
+         value = self.func(*args)
+         self.cache[args] = value
+         return value
+   def __repr__(self):
+      '''Return the function's docstring.'''
+      return self.func.__doc__
+   def __get__(self, obj, objtype):
+      '''Support instance methods.'''
+      return functools.partial(self.__call__, obj)
+#####
+
+
 #My family and I are going to be visiting the States to see a few colleges/
 #universities, so I thought what better time to play around with TSP?
 #Don't know what I'll try, but first up for sure is brute force, with
@@ -121,6 +155,7 @@ def bruteForce():
 # city one and visiting all cities in the set S, terminating at city l.
 # Note that because Python is zero-indexed, S is actually from {1, ..., n-1}
 
+@memoized
 def Eq5HKD(S, el):
 
     # Each return returns the minimum distance of starting at
@@ -132,11 +167,11 @@ def Eq5HKD(S, el):
         return getDistance(cities[0], cities[el]), [0]
     #5 b)
     elif len(S) > 1:
-        newS = S[:]
+        newS = set(S.copy())
         newS.remove(el)
         minM = 100000000 #some really big number
         for m in newS:
-            newC = Eq5HKD(newS, m)
+            newC = Eq5HKD(frozenset(newS), m)
             newM = newC[0] + getDistance(cities[m], cities[el])
             if newM < minM:
                 minM = newM
@@ -147,7 +182,7 @@ def Eq5HKD(S, el):
 def HeldKarpDynamic():
     '''The method as described in Held and Karp's 1962 paper.
     Coincidentally, also the one referenced by xkcd.'''
-    subCities = range(1, len(cities))
+    subCities = set(range(1, len(cities)))
 
     # Equation 6 in the paper reads as follows:
     # (6)   c = min_lϵ{2, 3, ..., n} [C({2, 3, ..., n}, l) + a_l1].
@@ -155,7 +190,7 @@ def HeldKarpDynamic():
 
     minC = 100000000 #some really big number
     for el in subCities:
-        i = Eq5HKD(subCities, el)
+        i = Eq5HKD(frozenset(subCities), el)
         newC = i[0] + getDistance(cities[el], cities[0])
         if newC < minC:
             minC = newC
@@ -166,9 +201,9 @@ def HeldKarpDynamic():
 #############################Main##########################
 if __name__ == '__main__':
     solution = HeldKarpDynamic()
-    print 'Shortest route is {0} with total distance {1}km.'\
-    .format(solution[1], solution[0])
+    print('Shortest route is {0} with total distance {1}km.'\
+    .format(solution[1], solution[0]))
     
     solution = bruteForce()
-    print 'Shortest route is {0} with total distance {1}km.'\
-    .format(solution[1], solution[0])
+    print('Shortest route is {0} with total distance {1}km.'\
+    .format(solution[1], solution[0]))
