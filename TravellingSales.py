@@ -122,31 +122,32 @@ def bruteForce():
 # Note that because Python is zero-indexed, S is actually from {1, ..., n-1}
 
 def Eq5HKD(S, el):
+
+    # Each return returns the minimum distance of starting at
+    # city 0 and going through all cities in the subset S, as well as
+    # the number of the city determined to be the minimum distance from el.
+    
     #5 a)
     if len(S) == 1:
-        return getDistance(cities[0], cities[el])
+        return getDistance(cities[0], cities[el]), [0]
     #5 b)
     elif len(S) > 1:
         newS = S[:]
         newS.remove(el)
         minM = 100000000 #some really big number
         for m in newS:
-            newM = Eq5HKD(newS, m) + getDistance(cities[m], cities[el])
+            newC = Eq5HKD(newS, m)
+            newM = newC[0] + getDistance(cities[m], cities[el])
             if newM < minM:
                 minM = newM
-        return minM
+                path = [m] + newC[1]
+        return minM, path
         
 
 def HeldKarpDynamic():
     '''The method as described in Held and Karp's 1962 paper.
     Coincidentally, also the one referenced by xkcd.'''
     subCities = range(1, len(cities))
-    
-    # Held and Karp's paper states that we perform two phases of computation:
-    # In phase one, we determine the optimum cost (distance.)
-    # In phase two, we find the permutation that matches that cost.
-    # Yes, there are probably some optimizations that can be made but
-    # I'm trying to implement this verbatim(-ish) from the paper.
 
     # Equation 6 in the paper reads as follows:
     # (6)   c = min_lϵ{2, 3, ..., n} [C({2, 3, ..., n}, l) + a_l1].
@@ -154,13 +155,20 @@ def HeldKarpDynamic():
 
     minC = 100000000 #some really big number
     for el in subCities:
-        newC = Eq5HKD(subCities, el) + getDistance(cities[el], cities[0])
+        i = Eq5HKD(subCities, el)
+        newC = i[0] + getDistance(cities[el], cities[0])
         if newC < minC:
             minC = newC
+            path = [0, el] + i[1]
+    solution = [cities[x] for x in path]
+    return minC, solution
     
-
 #############################Main##########################
 if __name__ == '__main__':
     solution = HeldKarpDynamic()
-##    print 'Shortest route is {0} with total distance {1}km.'\
-##    .format(solution[1], solution[0])
+    print 'Shortest route is {0} with total distance {1}km.'\
+    .format(solution[1], solution[0])
+    
+    solution = bruteForce()
+    print 'Shortest route is {0} with total distance {1}km.'\
+    .format(solution[1], solution[0])
