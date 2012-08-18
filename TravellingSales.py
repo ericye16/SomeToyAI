@@ -123,13 +123,12 @@ def bruteForce():
     #have any clue how to find all permutations of a list.
     import itertools
     #Find every permutation of the places we visit.
-    sequences = list(itertools.permutations(cities))
+    sequences = list(itertools.permutations(cities[1:]))
     #Remember to start and end at home.
     #Each sequence in sequences stores a list as follows:
     #[Total distance, [list of places to go in order]]
     for i in range(len(sequences)):
-        currentSeq = list(sequences[i])
-        currentSeq.append(currentSeq[0]) #make cyclical
+        currentSeq = [cities[0]] + list(sequences[i]) + [cities[0]]
         sequences[i] = [-1, currentSeq]
     #Go through each sequence and update the total distance for each.
     for i in range(len(sequences)):
