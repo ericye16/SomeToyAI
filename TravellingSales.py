@@ -23,31 +23,31 @@ distances = (
     (('Home', 'Cornell'), 397),
     (('Home', 'Harvard'), 881),
     (('Home', 'Yale'), 820),
-    (('Home', 'Carnegie'), 516),
+##    (('Home', 'Carnegie'), 516),
     (('Home', 'Boston'), 886),
     (('Home', 'Falls'), 338),
 
     #Distances from Cornell
     (('Cornell', 'Harvard'), 530),
     (('Cornell', 'Yale'), 419),
-    (('Cornell', 'Carnegie'), 560),
+##    (('Cornell', 'Carnegie'), 560),
     (('Cornell', 'Boston'), 533),
     (('Cornell', 'Falls'), 67),
 
     #Distances from Harvard
     (('Harvard', 'Yale'), 217),
-    (('Harvard', 'Carnegie'), 915),
+##    (('Harvard', 'Carnegie'), 915),
     (('Harvard', 'Boston'), 5), #no joke
     (('Harvard', 'Falls'), 557),
 
     #Distances from Yale
-    (('Yale', 'Carnegie'), 722),
+##    (('Yale', 'Carnegie'), 722),
     (('Yale', 'Boston'), 222),
     (('Yale', 'Falls'), 502),
 
     #Distances from Carnegie
-    (('Carnegie', 'Boston'), 944),
-    (('Carnegie', 'Falls'), 523),
+##    (('Carnegie', 'Boston'), 944),
+##    (('Carnegie', 'Falls'), 523),
 
     #Distance from Boston
     (('Boston', 'Falls'), 560)
